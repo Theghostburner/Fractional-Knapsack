@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>
+    using namespace std;
+    typedef long long int ll;
+     
+    struct worker{
+        ll speed, cost, time;
+    };
+     
+    bool compare(worker w1, worker w2){
+        if(w1.time == w2.time){ 
+            if(w1.speed == w2.speed){
+                return w1.cost < w2.cost; //the person with less cost will be preferred.
+            }
+            return w1.speed > w2.speed; //the person with more speed will be preferred
+        }
+        return w1.time < w2.time; //the person who is available first will be preferred.
+    }
+     
+    int main()
+    {
+        //Write your code here
+        ll n, d;
+        cin >> n >> d;
+        worker w[n];
+        for(ll i = 0; i < n; i++){
+            cin >> w[i].time >> w[i].cost >> w[i].speed; //taking correct inputs
+        }
+        sort(w, w + n, compare); //sorting the array
+        // for(int i = 0; i < n; i++){
+        //     cout << "time: " << w[i].time << " speed: " << w[i].speed << " cost: " << w[i].cost << endl;
+        // }
+     
+        ll area = 0;
+        ll bestSpeed = 0, cost = 0, lastTime = 0;
+        for(ll i = 0; i < n; i++)
+        {
+            ll additional = bestSpeed *1L* (w[i].time - lastTime); //calculating the area that would be painted by until arrival of new worker
+            area = area  + additional; //total area calculated
+            if(area >= d){ //house is painted simply break
+                break;
+            }
+            if(w[i].speed > bestSpeed){ //updating the speed and cost if a person with more speed has arrived
+                bestSpeed = w[i].speed;
+                cost = cost + w[i].cost;
+            }
+            lastTime = w[i].time; 
+        }
+        cout << cost << endl;
+        return 0;
+    }
